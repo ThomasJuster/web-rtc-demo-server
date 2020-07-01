@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "module": "CommonJS",
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "baseUrl": "."
+  },
+  "include": ["./src", "./types"],
+  "exclude": ["./node_modules"]
+}
