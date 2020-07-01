@@ -1,6 +1,6 @@
 import WebSocket from 'ws'
 import { ok } from 'assert'
-import { SocketMessage } from '@rtc-demo/api'
+import { SocketMessage } from '@web-rtc-demo/shared'
 
 export function parseSocketMessage (data: WebSocket.Data): SocketMessage {
   const messageAsString = data.toString('utf-8')

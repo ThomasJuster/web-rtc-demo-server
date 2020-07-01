@@ -1,7 +1,7 @@
 import { createServer, IncomingMessage } from "http";
 import WebSocket from "ws";
 import { ok } from 'assert'
-import { SocketMessage } from '@rtc-demo/api'
+import { SocketMessage } from '@web-rtc-demo/shared'
 import { routes } from './routes'
 import { extractSessionNameAndPasswordFromURL, parseSocketMessage, cors } from './utils'
 
