@@ -5,13 +5,14 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node -P ./tsconfig.json ./src/server.ts"
+    "start": "npx ts-node -P ./tsconfig.json ./src/server.ts"
   },
   "author": {
     "name": "Thomas Juster",
     "email": "juster.thomas@gmail.com"
   },
   "license": "MIT",
+  "repository": "https://github.com/ThomasJuster/web-rtc-demo-server",
   "dependencies": {
     "ws": "^7.3.0"
   },
@@ -21,6 +22,7 @@
     "@types/ws": "^7.2.6",
     "@typescript-eslint/eslint-plugin": "^3.5.0",
     "@typescript-eslint/parser": "^3.5.0",
+    "@web-rtc-demo/shared": "git+ssh://git@github.com/ThomasJuster/web-rtc-demo-shared.git#master",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
