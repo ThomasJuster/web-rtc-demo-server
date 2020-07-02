@@ -41,7 +41,7 @@ const server = createServer((request, response) => {
 
 
 function send(client: WebSocket, peerId: string, data: SocketMessage): void {
-  console.debug(`send to peer ${peerId}:`, data)
+  console.info(`send to peer ${peerId}:`, data)
   return client.send(JSON.stringify(data))
 }
 
