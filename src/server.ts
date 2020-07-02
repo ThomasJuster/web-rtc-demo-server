@@ -41,7 +41,7 @@ const server = createServer((request, response) => {
 
 
 function send(client: WebSocket, peerId: string, data: SocketMessage): void {
-  console.info(`send to peer ${peerId}:`, data)
+  if (data.type !== 'ice-candidate') console.info(`send to peer ${peerId}:`, data)
   return client.send(JSON.stringify(data))
 }
 
