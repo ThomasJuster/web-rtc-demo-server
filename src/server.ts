@@ -40,7 +40,8 @@ const server = createServer((request, response) => {
 });
 
 
-function send (client: WebSocket, data: SocketMessage): void {
+function send(client: WebSocket, peerId: string, data: SocketMessage): void {
+  console.debug(`send to peer ${peerId}:`, data)
   return client.send(JSON.stringify(data))
 }
 
@@ -57,8 +58,8 @@ webSocketServer.on('connection', (client: WebSocket, request: IncomingMessage) =
   ok(newPeerId);
   console.info('new connection of peer:', newPeerId);
   
-  send(client, { type: "connected-peers-id", peerIds: Array.from(peers.keys()) });
   peers.set(newPeerId, client);
+  send(client, newPeerId, { type: "connected-peers-id", peerIds: Array.from(peers.keys()) });
 
   client.on('close', () => {
     console.info('on close', newPeerId)
@@ -76,17 +77,17 @@ webSocketServer.on('connection', (client: WebSocket, request: IncomingMessage) =
         // send the offerer’s offer to the answerer
         const answererSocket = session.peers.get(socketMessage.answererId);
         ok(answererSocket);
-        return send(answererSocket, socketMessage);
+        return send(answererSocket, newPeerId, socketMessage);
       case 'answer':
         // send the answerer’s answer to the offerer
         const offererSocket = session.peers.get(socketMessage.offererId);
         ok(offererSocket);
-        return send(offererSocket, socketMessage);
+        return send(offererSocket, newPeerId, socketMessage);
       case 'ice-candidate':
         // exchange ice candidates
         const peerSocket = session.peers.get(socketMessage.toPeerId);
         ok(peerSocket);
-        return send(peerSocket, socketMessage);
+        return send(peerSocket, newPeerId, socketMessage);
       case 'keep-alive':
         return console.info('maintain client socket', newPeerId);
       default:
