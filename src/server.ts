@@ -36,7 +36,6 @@ const server = createServer((request, response) => {
   if (!handler) {
     return response.writeHead(404).end();
   }
-  console.info('execute handler', handler)
   handler({ request, response, sessions });
 });
 
