@@ -1,11 +1,16 @@
 {
-  "name": "@rtc-demo/server",
+  "name": "@web-rtc-demo/server",
   "version": "1.0.0",
   "description": "Vue.js Rest & Socket Server to demonstrate the Web RTC API usage",
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx ts-node -P ./tsconfig.json ./src/server.ts"
+    "clean": "rm -rf ./build",
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "poststart": "npm run clean",
+    "watch": "npm run build && node ./build/server.js",
+    "start": "ts-node -P ./tsconfig.json ./src/server.ts"
   },
   "author": {
     "name": "Thomas Juster",
@@ -18,15 +23,17 @@
   },
   "devDependencies": {
     "@types/node": "^14.0.14",
+    "@types/path-to-regexp": "^1.7.0",
     "@types/ws": "^7.2.6",
     "@typescript-eslint/eslint-plugin": "^3.5.0",
     "@typescript-eslint/parser": "^3.5.0",
-    "@web-rtc-demo/shared": "https://github.com/ThomasJuster/web-rtc-demo-shared/blob/master/web-rtc-demo-shared-1.0.0.tgz?raw=true",
-    "eslint": "^7.3.1",
+    "@web-rtc-demo/shared": "https://github.com/ThomasJuster/web-rtc-demo-shared/blob/master/web-rtc-demo-shared-2.0.0.tgz?raw=true",
+    "eslint": "^7.4.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
+    "path-to-regexp": "^6.1.0",
     "ts-node": "^8.10.2",
     "typescript": "~3.9.3"
   }

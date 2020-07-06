@@ -1,9 +1,10 @@
-import { createServer, IncomingMessage } from "http";
-import WebSocket from "ws";
+import { createServer, IncomingMessage } from 'http';
+import WebSocket from 'ws';
 import { ok } from 'assert'
-import { SocketMessage } from '@web-rtc-demo/shared'
+import { SocketMessage, parseSocketMessage, SOCKET_ROUTE } from '@web-rtc-demo/shared'
+import { match } from 'path-to-regexp'
 import { routes } from './routes'
-import { extractSessionNameAndPasswordFromURL, parseSocketMessage, cors } from './utils'
+import { cors } from './utils'
 
 export type SessionName = string;
 export type SessionPassword = string | null;
@@ -27,16 +28,18 @@ const sessions: Sessions = new Map();
 
 const server = createServer((request, response) => {
   cors(response)
-  if (request.method?.toUpperCase() === 'OPTIONS') return response.writeHead(204).end();
+  const method = request.method?.toUpperCase()
+  if (method === 'OPTIONS') return response.writeHead(204).end();
   
-  const route = `${request.method?.toUpperCase()} ${request.url}`;
-  const [_, handler] = Object.entries(routes).find(([pattern]) => new RegExp(pattern).test(route)) || [null, null];
-  console.info('route', route)
-  console.info('handler', handler?.name)
-  if (!handler) {
-    return response.writeHead(404).end();
+  for (const route of Object.values(routes)) {
+    if (route.method !== method) continue
+    const matchResult = match<any>(route.pathname, { decode: decodeURIComponent })(request.url)
+    if (!matchResult) continue
+    
+    console.info('route', route)
+    return route.handler({ params: matchResult.params, request, response, sessions })
   }
-  handler({ request, response, sessions });
+  return response.writeHead(404).end()
 });
 
 
@@ -48,18 +51,22 @@ function send(client: WebSocket, peerId: string, data: SocketMessage): void {
 const webSocketServer = new WebSocket.Server({ server });
 
 webSocketServer.on('connection', (client: WebSocket, request: IncomingMessage) => {
-  const url = new URL(request.url, 'http://whatever.com')
-  const { sessionName } = extractSessionNameAndPasswordFromURL(request.url);
+  const url = new URL(request.url, 'http://localhost')
+  const matchResult = match<{ sessionName: string }>(SOCKET_ROUTE, { decode: decodeURIComponent })(url.pathname)
+  ok(matchResult)
+
+  const { sessionName } = matchResult.params
   console.info('sessions', sessions, 'sessionName', sessionName)
   const session = sessions.get(sessionName)
   ok(session);
+
   const { peers } = session;
   const newPeerId = url.searchParams.get('peerId');
   ok(newPeerId);
   console.info('new connection of peer:', newPeerId);
   
-  peers.set(newPeerId, client);
   send(client, newPeerId, { type: "connected-peers-id", peerIds: Array.from(peers.keys()) });
+  peers.set(newPeerId, client);
 
   client.on('close', () => {
     console.info('on close', newPeerId)

@@ -1,4 +1,4 @@
-import { RouteParameters } from 'src/utils'
+import { RouteParameters } from '../utils'
 
 export function home ({ response, sessions }: RouteParameters): void {
   response.setHeader('Content-Type', 'text/html')

@@ -1,6 +1,5 @@
-import { RouteParameters, extractSessionNameAndPasswordFromURL } from '../utils'
+import { RouteParameters } from '../utils'
 
-export function sessionExists ({ request, response, sessions }: RouteParameters): unknown {
-  const { sessionName } = extractSessionNameAndPasswordFromURL(request.url);
-  return response.writeHead(sessions.has(sessionName) ? 200 : 404).end();
+export function sessionExists ({ response, sessions, params }: RouteParameters<{ sessionName: string }>): unknown {
+  return response.writeHead(sessions.has(params.sessionName) ? 200 : 404).end();
 }
