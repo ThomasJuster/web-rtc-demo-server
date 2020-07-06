@@ -52,7 +52,8 @@ const webSocketServer = new WebSocket.Server({ server });
 
 webSocketServer.on('connection', (client: WebSocket, request: IncomingMessage) => {
   const url = new URL(request.url, 'http://localhost')
-  const matchResult = match<{ sessionName: string }>(SOCKET_ROUTE, { decode: decodeURIComponent })(url.pathname)
+  const { pathname } = new URL(SOCKET_ROUTE, 'http://localhost')
+  const matchResult = match<{ sessionName: string }>(pathname, { decode: decodeURIComponent })(url.pathname)
   ok(matchResult)
 
   const { sessionName } = matchResult.params
