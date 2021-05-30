@@ -19,7 +19,7 @@
   "license": "MIT",
   "repository": "https://github.com/ThomasJuster/web-rtc-demo-server",
   "dependencies": {
-    "ws": "^7.3.0"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "@types/node": "^14.0.14",
